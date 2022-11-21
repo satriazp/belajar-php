@@ -1,19 +1,57 @@
 <?php
+// 1. Buat koreksi dengan MySQL
+$con = mysqli_connect("localhost","root","","fakultas");
 
-echo "Hello World! <br>";
+// 2. Cek koneksi dengan MySQL
+if(mysqli_connect_errno()){
+    echo "Koneksi gagal ". mysqli_connect_error();
 
-$nama = "Satria Yudha Pratama";
-$umur = "21";
+}else{
+    echo "Koneksi berhasil";
+}
 
-echo "Nama saya <strong>$nama</strong>, saya berumur $umur tahun <br>";
+// 3. membaca data dari table mysql.
+$query = "SELECT * FROM mahasiswa";
 
-$namaAdik = "Laily Cahaya Putri";
-$umurAdik = "16";
+// 4. tampilkan data, dengan menjalankan sql query
+$result = mysqli_query($con,$query) ;
+$mahasiswa = [];
+if ($result){
+    // tampilkan data satu per satu
+    while ($row = mysqli_fetch_assoc($result)){
+        echo "<br>".$row["nama"]." alamat : ". $row["alamat"];
+        $mahasiswa[] = $row;
+    }
+    mysqli_free_result($result);
 
-echo "Nama adik saya <strong>$namaAdik</strong>, adik saya berumur $umurAdik tahun <br>";
+}
 
-$selisihUmur = $umur - $umurAdik;
-
-echo "Selisih umur saya dengan adik saya adalah $selisihUmur tahun";
+// 5. tutup koneksi mysql
+mysqli_close($con);
 
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Data Mahasiswa</h1>
+    <?php var_dump($mahasiswa); ?>
+    <table border="1" style="width:100%;">
+        <tr>
+            <th>NIM</h1>
+            <th>Nama</th>
+</tr>
+<?php foreach($mahasiswa as $value): ?>
+<tr>
+<td><?php echo $value["nim"]; ?></td>
+<td><?php echo $value["nama"]; ?></td>
+</tr>
+<?php endforeach; ?>
+</body>
+</html>
